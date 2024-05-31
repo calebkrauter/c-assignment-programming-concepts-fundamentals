@@ -50,10 +50,9 @@ int main() {
     int bin2Add[] =   {1,1,0,0};
     int sizeAdd = 6;
     int *addOutSize = &sizeAdd;
- 
-        printArray("original bin1: ", bin1Add, 5);
-        printArray("original bin2: ", bin2Add, 4);
-        printArray("binAdd", binAdd(bin1Add, sizeAdd1, bin2Add, sizeAdd2, addOutSize), *addOutSize);
+    int *array = binAdd(bin1Add, sizeAdd1, bin2Add, sizeAdd2, addOutSize);
+    printArray("binAdd", array, *addOutSize);
+    free(array);
     return 0;
 }
 // Add.
@@ -67,24 +66,16 @@ int *binAdd(int *bin1, int size1, int *bin2, int size2, int *outSize) {
     int largerSize = size1 > size2 ? size1 : size2;
     bin1 = reverse(bin1, size1);
     bin2 = reverse(bin2, size2);
-    bin1 = appendZeros(bin1, size1+1, largerSize);
-    bin2 = appendZeros(bin2, size2+1, largerSize);
-    // bin1 = reverse(bin1, largerSize);
-    // bin2 = reverse(bin2, largerSize);
-    printArrayDebug(bin1, largerSize);
-    printArrayDebug(bin2, largerSize);
+    bin1 = appendZeros(bin1, size1 + 1, *outSize);
+    bin2 = appendZeros(bin2, size2 + 1, *outSize);
 
     int resultSize = size1 >= size2 ? size1 : size2;
     int *result = malloc(sizeof(int) * resultSize);
-    int *carries = malloc(sizeof(int) * resultSize + 1);
-    // int size = *outSize;
-    // *outSize = 6;
 
-    int *newBin1 = bin1;
-    int *newBin2 = bin2;
     int decimalVal1 = 0;
     int decimalVal2 = 0;
     int j = 0;
+    printf("%d", *outSize);
     for (double i = 0; i < *outSize; i++) {
         
         decimalVal1 += (bin1[j] * pow(2.0, i));
@@ -102,7 +93,10 @@ int *binAdd(int *bin1, int size1, int *bin2, int size2, int *outSize) {
         resultDecimal /= 2;    printf(" %d", resultDecimal);
 
     }
-    return newArray;
+    free(bin1);
+    free(bin2);
+    free(result);
+    return reverse(newArray, *outSize);
 }
 int *reverse(int *bin, int size) {
     int *reversedArray = malloc(sizeof(int) * size);
